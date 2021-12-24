@@ -10,13 +10,21 @@ data = response.json()
 quote = data["thought"]["quote"]
 quote = quote.replace(',', ",\n")
 
+array = quote.split()
+quote = ''
+for i in range(0, len(array), 7):
+    quote += ' '.join(array[i:i+7]) + '\n'
+
 BACKGROUND = Image.open("background.jpg")
-FONT = ImageFont.truetype("CONSOLA.TTF", 70)
 USABLE_BACKGROUND = ImageDraw.Draw(BACKGROUND)
 
 WIDTH, HEIGHT = BACKGROUND.size
 
-USABLE_BACKGROUND.text((WIDTH / 2, HEIGHT / 2), quote, (255, 255, 255), font=FONT, anchor="mm")
+FONT = ImageFont.truetype("CONSOLA.TTF", round(WIDTH / 45))
 
+width, height = USABLE_BACKGROUND.textsize(quote, font=FONT)
+
+USABLE_BACKGROUND.text(((WIDTH - width) / 2, (HEIGHT - height) / 2),
+                       quote, (130, 130, 255), font=FONT, anchor="mm")
 BACKGROUND.save("changed_background.jpg")
 ctypes.windll.user32.SystemParametersInfoW(20, 0, 'D:\\changed_background.jpg', 0)
